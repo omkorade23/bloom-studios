@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloom Studios</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Great+Vibes&family=Josefin+Sans:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FFE8EA;
+      --bloom: #F05858;
+      --dark-red: #B82020;
+      --btn-red: #B83020;
+      --text-sub: #5A3030;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100vh;
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    .page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ═══════════════════════════════════════════
+       PAGE 1 — LANDING
+    ═══════════════════════════════════════════ */
+    #page1 {
+      position: relative;
+      gap: 0;
+    }
+
+    .bloom-canvas-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: default;
+      user-select: none;
+      width: 100%;
+      height: 60vh;
+      animation: logoIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes logoIn {
+      from {
+        opacity: 0;
+        transform: scale(0.93) translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    #bloomCanvas {
+      display: block;
+      max-width: 100%;
+    }
+
+    .btn-build {
+      margin-top: 20px;
+      background: var(--btn-red);
+      color: #fff;
+      border: none;
+      padding: 16px 80px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.18s;
+      animation: fadeIn 0.6s ease 0.55s both;
+    }
+
+    .btn-build:hover {
+      opacity: 0.88;
+    }
+
+    .byline {
+      position: fixed;
+      bottom: 18px;
+      right: 22px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-sub);
+      opacity: 0.6;
+      letter-spacing: 0.04em;
+    }
+
+    /* ═══════════════════════════════════════════
+       SHARED UI ELEMENTS (BIGGER LOGO)
+    ═══════════════════════════════════════════ */
+    .mini-logo-img {
+      /* Increased max-height to 190px */
+      height: clamp(110px, 16vw, 190px);
+      width: auto;
+      display: block;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .mini-logo-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .mini-bloom-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(60px, 9vw, 110px);
+      /* Bigger Text */
+      color: var(--bloom);
+      line-height: 1;
+    }
+
+    .mini-studios-text {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(36px, 5vw, 65px);
+      /* Bigger Text */
+      color: var(--dark-red);
+      margin-top: -0.18em;
+    }
+
+    /* ═══════════════════════════════════════════
+       PAGE 2 — SELECTION (Layout Fixed)
+    ═══════════════════════════════════════════ */
+    #page2 {
+      justify-content: flex-start;
+      /* FIX: Anchors logo to top so it stays in place */
+      padding-top: 10px;
+      /* FIX: Constant spacing from top edge */
+      padding-bottom: 40px;
+    }
+
+    .p2-logo-wrap {
+      margin-bottom: -10px;
+      /* FIX: Tighter gap to subtitle (was 25px) */
+    }
+
+    .subtitle {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: clamp(11px, 1.4vw, 14px);
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      color: #7A5050;
+      text-transform: uppercase;
+      margin-bottom: 35px;
+      /* Pulled the grid up slightly too */
+    }
+
+    .flower-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .flower-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(15px, 3vw, 50px);
+      width: 100%;
+    }
+
+    .flower-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+
+    .flower-item:hover {
+      transform: scale(1.03);
+    }
+
+    .flower-item.selected {
+      transform: scale(1.05);
+    }
+
+    .flower-img-wrap {
+      /* Kept your elegant smaller size */
+      width: clamp(70px, 11vw, 130px);
+      height: clamp(90px, 14vw, 160px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+    }
+
+    .flower-item.selected .flower-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 48%;
+      border: 1px solid rgba(184, 32, 32, 0.4);
+      box-shadow: 0 0 15px rgba(184, 32, 32, 0.15);
+    }
+
+    .flower-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .flower-name {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .flower-item:hover .flower-name,
+    .flower-item.selected .flower-name {
+      opacity: 1;
+    }
+
+    /* ═══════════════════════════════════════════
+       PAGE 3 — NOTE WRITING (Aligned Top)
+    ═══════════════════════════════════════════ */
+    #page3 {
+      justify-content: flex-start;
+      /* Anchor to top like Page 2 */
+      padding-top: 50px;
+      /* Match Page 2 padding */
+      padding-bottom: 40px;
+    }
+
+    .p3-logo-wrap {
+      margin-bottom: 5px;
+      /* Tiny gap to subtitle */
+      cursor: pointer;
+    }
+
+    .note-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 550px;
+      margin-bottom: 40px;
+    }
+
+    .note-textarea {
+      width: 100%;
+      min-height: 180px;
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(184, 80, 80, 0.25);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-style: italic;
+      font-weight: 300;
+      color: #3C2020;
+      resize: none;
+      outline: none;
+      letter-spacing: 0.02em;
+      border-radius: 4px;
+    }
+
+    .note-textarea:focus {
+      border-color: rgba(184, 80, 80, 0.5);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .note-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* --- UPDATED Button Style (Needs solid background to hide Spidey) --- */
+    .btn-gen-msg {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dark-red);
+      /* CHANGED: Needs solid background to hide the image behind it */
+      background: var(--bg);
+      border: 1px solid rgba(184, 32, 32, 0.4);
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: all 0.2s;
+      /* IMPORTANT: z-index keeps button on top of spidey */
+      position: relative;
+      z-index: 10;
+    }
+
+    .btn-gen-msg:hover {
+      background: var(--dark-red);
+      color: #fff;
+      border-color: var(--dark-red);
+    }
+
+    .btn-gen-msg:disabled {
+      opacity: 0.4;
+      cursor: wait;
+    }
+
+    /* --- NEW SPIDEY HOVER EFFECT (Fixed Position & Speed) --- */
+
+    .spidey-wrap {
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      /* Ensures the image doesn't get cut off if it drops low */
+      overflow: visible;
+    }
+
+    .spidey-img {
+      position: absolute;
+      /* 1. LEFT ALIGNMENT: Hangs from the left side now */
+      left: 15px;
+
+      /* 2. STARTING POSITION: Hidden behind the button */
+      top: -10px;
+
+      width: 32px;
+      /* Adjust scale if needed */
+      height: auto;
+      z-index: 1;
+      /* Behind the button (button is z-index 10) */
+      opacity: 0;
+      pointer-events: none;
+
+      /* 3. SLOW TRANSITION: 1s duration for a slow descent */
+      transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* THE TRIGGER */
+    .spidey-wrap:hover .spidey-img {
+      opacity: 1;
+      /* 4. DROP DISTANCE: Adjusted so the web stays connected to the button */
+      top: 24px;
+    }
+
+    .btn-gen-msg:hover {
+      background: var(--dark-red);
+      color: #fff;
+    }
+
+    .btn-gen-msg:disabled {
+      opacity: 0.4;
+      cursor: wait;
+    }
+
+    .char-count {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      color: var(--text-sub);
+      opacity: 0.5;
+    }
+
+    /* Shared Buttons */
+    .btn-wrap {
+      background: var(--btn-red);
+      color: #fff;
+      border: none;
+      padding: 16px 80px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.18s;
+    }
+
+    .btn-wrap:hover {
+      opacity: 0.88;
+    }
+
+    /* ═══════════════════════════════════════════
+       PAGE 4 — RESULT
+    ═══════════════════════════════════════════ */
+    #page4 {
+      padding: 52px 24px 60px;
+    }
+
+    .result-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+      width: 100%;
+    }
+
+    .result-img-frame {
+      width: min(320px, 82vw);
+      aspect-ratio: 3/4;
+      background: linear-gradient(140deg, #F8DDD8 0%, #EEC4BE 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .result-img-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .result-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-style: italic;
+      font-weight: 300;
+      color: #3C2020;
+      text-align: center;
+      max-width: 400px;
+      line-height: 1.75;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn-action {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dark-red);
+      background: none;
+      border: 1px solid var(--dark-red);
+      padding: 11px 30px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-action:hover {
+      background: var(--dark-red);
+      color: #fff;
+    }
+
+    .btn-back {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.55;
+      text-decoration: underline;
+    }
+
+    .btn-back:hover {
+      opacity: 1;
+    }
+
+    /* Loading & Toast */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 232, 234, 0.93);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      gap: 20px;
+    }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
+    .loading-label {
+      font-family: 'Great Vibes', cursive;
+      font-size: 38px;
+      color: var(--dark-red);
+    }
+
+    .dots span {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--bloom);
+      margin: 0 3px;
+      animation: pulse 1.3s ease infinite;
+    }
+
+    .dots span:nth-child(2) {
+      animation-delay: 0.18s;
+    }
+
+    .dots span:nth-child(3) {
+      animation-delay: 0.36s;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.65);
+        opacity: 0.35;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%) translateY(14px);
+      background: #8B2020;
+      color: #fff;
+      padding: 11px 22px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      opacity: 0;
+      transition: all 0.28s;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="page1" class="page active">
+    <div class="bloom-canvas-wrap" id="bloomWrap">
+      <canvas id="bloomCanvas"></canvas>
+    </div>
+
+    <button class="btn-build" onclick="showPage(2)">Build a Bouquet</button>
+    <div class="byline">by @omkorade_23</div>
+  </div>
+
+  <div id="page2" class="page">
+    <div class="p2-logo-wrap" onclick="showPage(1)">
+      <img class="mini-logo-img" src='./assets/logo.png' alt="Bloom Studios"
+        onerror="this.style.display='none'; document.getElementById('miniLogoFallback').style.display='flex';" />
+      <div id="miniLogoFallback" class="mini-logo-fallback" style="display:none">
+        <span class="mini-bloom-text">BLOOM</span>
+        <span class="mini-studios-text">studios</span>
+      </div>
+    </div>
+    <div class="subtitle">Grab Your Favourite Blooms</div>
+
+    <div class="flower-grid">
+      <div class="flower-row" id="row1"></div>
+      <div class="flower-row" id="row2"></div>
+    </div>
+
+    <button class="btn-wrap" onclick="validateAndNext()">Next</button>
+  </div>
+
+  <div id="page3" class="page">
+    <div class="p3-logo-wrap" onclick="showPage(1)">
+      <img class="mini-logo-img" src='./assets/logo.png' alt="Bloom Studios" />
+    </div>
+
+    <div class="subtitle">Add a Note</div>
+
+    <div class="note-section">
+      <textarea class="note-textarea" id="noteText" placeholder="Write something from your heart..."
+        maxlength="250"></textarea>
+      <div class="note-footer">
+        <div class="spidey-wrap">
+          <button class="btn-gen-msg" id="btnGenMsg" onclick="generateMessage()">Generate a message</button>
+          <img src="./assets/spidey.png" class="spidey-img" alt="Spidey">
+        </div>
+        <div class="char-count"><span id="charCount">0</span> / 250</div>
+      </div>
+    </div>
+
+    <button class="btn-wrap" onclick="generateBouquet()">Wrap Bouquet</button>
+    <button class="btn-back" style="margin-top:20px" onclick="showPage(2)">← Change Flowers</button>
+  </div>
+
+  <div id="page4" class="page">
+    <div class="result-inner">
+      <div onclick="showPage(1)" style="margin-bottom:20px; cursor:pointer">
+        <img class="mini-logo-img" src='./assets/logo.png' alt="Bloom Studios" />
+      </div>
+      <div class="result-img-frame" id="resultFrame"></div>
+      <p class="result-note" id="resultNote"></p>
+      <div class="result-actions">
+        <button class="btn-action" onclick="downloadBouquet()">Download</button>
+        <button class="btn-action" onclick="shareBouquet()">Share</button>
+      </div>
+      <button class="btn-back" onclick="showPage(3)">← Edit Note</button>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-label">Wrapping your bouquet...</div>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_BASE = 'http://localhost:8000';
+
+    const TULIP_FIELD_SRC = './assets/tulip-field.png';
+
+    const FLOWERS = [
+      { id: 'sunflower', name: 'Sunflower', row: 1, src: './assets/flowers/sunflower.png' },
+      { id: 'rose', name: 'Rose', row: 1, src: './assets/flowers/rose.png' },
+      { id: 'tulip', name: 'Tulip', row: 1, src: './assets/flowers/tulip.png' },
+      { id: 'lily', name: 'Lily', row: 1, src: './assets/flowers/lily.png' },
+      { id: 'allium', name: 'Allium', row: 1, src: './assets/flowers/allium.png' },
+      { id: 'aster', name: 'Aster', row: 2, src: './assets/flowers/aster.png' },
+      { id: 'carnation', name: 'Carnation', row: 2, src: './assets/flowers/carnation.png' },
+      { id: 'daisy', name: 'Daisy', row: 2, src: './assets/flowers/daisy.png' },
+    ];
+
+    /* ═══════════════════════════════════════════════════════════════
+       CANVAS LOGIC
+    ═══════════════════════════════════════════════════════════════ */
+    const canvas = document.getElementById('bloomCanvas');
+    const ctx = canvas.getContext('2d');
+    const bloomWrap = document.getElementById('bloomWrap');
+
+    const REVEAL_RADIUS = 150;
+    let tulipImg = null;
+    let logoImg = null;
+    let cursorX = -999, cursorY = -999;
+    let rafPending = false;
+
+    let tempCanvas = document.createElement('canvas');
+    let tempCtx = tempCanvas.getContext('2d');
+
+    const _tImg = new Image();
+    _tImg.src = TULIP_FIELD_SRC;
+    _tImg.onload = () => { tulipImg = _tImg; scheduleFrame(); };
+    _tImg.onerror = () => { console.log("Tulip missing"); tulipImg = null; scheduleFrame(); };
+
+    const _lImg = new Image();
+    _lImg.src = './assets/logo.png';
+    _lImg.onload = () => { logoImg = _lImg; initCanvas(); };
+    _lImg.onerror = () => console.log("Logo failed");
+
+    function initCanvas() {
+      if (!logoImg) return;
+      const dpr = window.devicePixelRatio || 1;
+      const W = window.innerWidth;
+      const H = window.innerHeight * 0.6;
+
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+
+      tempCanvas.width = W * dpr;
+      tempCanvas.height = H * dpr;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      tempCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      scheduleFrame();
+    }
+
+    function drawFrame() {
+      rafPending = false;
+      const W = canvas.width / (window.devicePixelRatio || 1);
+      const H = canvas.height / (window.devicePixelRatio || 1);
+
+      ctx.clearRect(0, 0, W, H);
+
+      if (!logoImg) return;
+
+      const padding = 20;
+      const scale = Math.min((W - padding) / logoImg.width, (H - padding) / logoImg.height, 1.2);
+      const drawW = logoImg.width * scale;
+      const drawH = logoImg.height * scale;
+      const drawX = (W - drawW) / 2;
+      const drawY = (H - drawH) / 2;
+
+      ctx.drawImage(logoImg, drawX, drawY, drawW, drawH);
+
+      if (tulipImg) {
+        tempCtx.clearRect(0, 0, W, H);
+
+        const grad = tempCtx.createRadialGradient(cursorX, cursorY, 0, cursorX, cursorY, REVEAL_RADIUS);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        grad.addColorStop(0.6, 'rgba(255, 255, 255, 1)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        tempCtx.fillStyle = grad;
+        tempCtx.fillRect(0, 0, W, H);
+
+        tempCtx.globalCompositeOperation = 'source-in';
+
+        const tScale = Math.max(drawW / tulipImg.width, drawH / tulipImg.height);
+        const tW = tulipImg.width * tScale;
+        const tH = tulipImg.height * tScale;
+        const tX = drawX + (drawW - tW) / 2;
+        const tY = drawY + (drawH - tH) / 2;
+
+        tempCtx.drawImage(tulipImg, tX, tY, tW, tH);
+        tempCtx.globalCompositeOperation = 'source-over';
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.drawImage(tempCanvas, 0, 0, W, H);
+        ctx.restore();
+      }
+    }
+
+    function scheduleFrame() {
+      if (!rafPending) { rafPending = true; requestAnimationFrame(drawFrame); }
+    }
+
+    bloomWrap.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      cursorX = e.clientX - r.left; cursorY = e.clientY - r.top;
+      scheduleFrame();
+    });
+
+    bloomWrap.addEventListener('touchmove', e => {
+      e.preventDefault(); const r = canvas.getBoundingClientRect();
+      const t = e.touches[0]; cursorX = t.clientX - r.left; cursorY = t.clientY - r.top;
+      scheduleFrame();
+    }, { passive: false });
+
+    window.addEventListener('resize', initCanvas);
+
+    // ═══════════════════════════════════════════════════════════════
+    //  APP LOGIC
+    // ═══════════════════════════════════════════════════════════════
+    let selectedFlowers = [];
+
+    function buildGrid() {
+      const row1 = document.getElementById('row1');
+      const row2 = document.getElementById('row2');
+      FLOWERS.forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'flower-item'; item.dataset.id = f.id;
+        const wrap = document.createElement('div'); wrap.className = 'flower-img-wrap';
+        const img = document.createElement('img'); img.src = f.src; img.alt = f.name;
+        img.onerror = function () {
+          this.style.cssText = 'width:80px;height:100px;background:rgba(240,150,150,0.15);border-radius:50%;display:block;';
+        };
+        wrap.appendChild(img);
+        const label = document.createElement('div'); label.className = 'flower-name'; label.textContent = f.name;
+        item.appendChild(wrap); item.appendChild(label);
+        item.addEventListener('click', () => toggleFlower(f.id, item));
+        (f.row === 1 ? row1 : row2).appendChild(item);
+      });
+    }
+
+    function toggleFlower(id, el) {
+      if (selectedFlowers.includes(id)) {
+        selectedFlowers = selectedFlowers.filter(x => x !== id); el.classList.remove('selected');
+      } else {
+        selectedFlowers.push(id); el.classList.add('selected');
+      }
+    }
+    buildGrid();
+
+    function showPage(n) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page' + n).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function validateAndNext() {
+      if (!selectedFlowers.length) { showToast('Pick at least one bloom 🌸'); return; }
+      showPage(3);
+    }
+
+    document.getElementById('noteText').addEventListener('input', function () {
+      document.getElementById('charCount').textContent = this.value.length;
+    });
+
+    async function generateMessage() {
+      const btn = document.getElementById('btnGenMsg');
+      btn.disabled = true; btn.textContent = '✨ Thinking...';
+      try {
+        const res = await fetch(`${API_BASE}/generate-message`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({})
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const ta = document.getElementById('noteText'); ta.value = data.message;
+        document.getElementById('charCount').textContent = data.message.length;
+      } catch { showToast('Backend not reachable'); }
+      finally { btn.disabled = false; btn.textContent = '✨ Generate a message'; }
+    }
+
+    async function generateBouquet() {
+      // Note: flowers are already selected from Page 2
+      const note = document.getElementById('noteText').value;
+      showLoading(true);
+      try {
+        const res = await fetch(`${API_BASE}/generate-bouquet`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ flowers: selectedFlowers, note })
+        });
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        renderResult(data.image, note); showPage(4);
+      } catch { showToast('Generation failed'); }
+      finally { showLoading(false); }
+    }
+
+    let _b64img = null;
+    function renderResult(b64, note) {
+      _b64img = b64;
+      const frame = document.getElementById('resultFrame'); frame.innerHTML = '';
+      if (b64) {
+        const img = document.createElement('img'); img.src = 'data:image/png;base64,' + b64;
+        frame.style.background = 'none'; frame.appendChild(img);
+      }
+      const noteEl = document.getElementById('resultNote');
+      noteEl.textContent = note; noteEl.style.display = note ? 'block' : 'none';
+    }
+
+    function downloadBouquet() {
+      if (!_b64img) { showToast('Nothing to download'); return; }
+      const a = document.createElement('a'); a.href = 'data:image/png;base64,' + _b64img;
+      a.download = 'bloom-bouquet.png'; a.click();
+    }
+    async function shareBouquet() {
+      try {
+        if (navigator.share && _b64img) {
+          const blob = await (await fetch('data:image/png;base64,' + _b64img)).blob();
+          await navigator.share({ files: [new File([blob], 'bloom-bouquet.png', { type: 'image/png' })] });
+        } else {
+          await navigator.clipboard.writeText(window.location.href); showToast('Link copied!');
+        }
+      } catch { showToast('Could not share'); }
+    }
+    function showLoading(v) { document.getElementById('loadingOverlay').classList.toggle('show', v); }
+    function showToast(msg) {
+      const t = document.getElementById('toast'); t.textContent = msg;
+      t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+
+</html>
