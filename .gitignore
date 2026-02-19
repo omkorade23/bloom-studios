@@ -5,3 +5,7 @@ __pycache__/
 .env
 venv/
 .vscode/
+
+# Ignore generated images but keep the folder
+backend/static/generated/*
+!backend/static/generated/.gitkeep
