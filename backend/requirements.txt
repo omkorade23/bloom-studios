@@ -1,6 +1,6 @@
 fastapi
 uvicorn
 pillow
-openai
+google-generativeai
 python-dotenv
 requests
